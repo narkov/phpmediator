@@ -1,50 +1,50 @@
 <?php
 
 /*
-mediator pattern implementation 
+mediator pattern implementation for plugins management
 */
 
-interface Search
+interface Plugin
 {
-	public function search($value);
+	public function execute($value);
 }
 
-class GoogleSearch implements Search
+class GooglePlugin implements Plugin
 {
-	public function search($value) 
+	public function execute($value) 
 	{
 		return "googling $value";
 	}
 }
 
-class BingSearch implements Search
+class BingPlugin implements Plugin
 {
-	public function search($value)
+	public function execute($value)
 	{
 		return "binging $value";
 	}
 }
 
-class SearchMachine
+class PluginManager
 {
-	protected $_machines;
+	protected $_plugins;
 	protected $_value;
 
-	public function addMachine(Search $search)
+	public function addPlugin(Plugin $Plugin)
 	{
-		$this->_machines[] = $search;
+		$this->_plugins[] = $Plugin;
 		return $this;
 	}
 
 	public function setValue($value)
 	{
-		$this->_value = $this->_search($value);
+		$this->_value = $this->_execute($value);
 	}
 
-	protected function _search($value)
+	protected function _execute($value)
 	{
-		foreach ($this->_machines as $machine) {
-			$value = $machine->search($value);
+		foreach ($this->_plugins as $plugin) {
+			$value = $plugin->execute($value);
 		}
 		return $value;
 	}
@@ -55,8 +55,8 @@ class SearchMachine
 	}
 }
 
-$machine = new SearchMachine();
-$machine->addMachine(new GoogleSearch())
-		->addMachine(new BingSearch());
-$machine->setValue("porn");
-echo $machine->getValue();
+$pm = new PluginManager();
+$pm->addPlugin(new GooglePlugin())
+   ->addPlugin(new BingPlugin());
+$pm->setValue("porn");
+echo $pm->getValue();
