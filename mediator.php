@@ -4,16 +4,16 @@
 mediator pattern implementation for plugins management
 */
 
-/* all plugins must implements this interface */
-interface Plugin
-{
-	public function execute($value);
-}
+// load interfaces / types
+require_once('core.php');
+
+// autoload plugins
+require_once('init.php');
 
 /* mediator class for plugins */
 class PluginManager
 {
-	protected $_plugins;
+	protected $_plugins; // all plugins objects are stored here
 	protected $_value;
 
 	public function addPlugin(Plugin $Plugin)
@@ -41,27 +41,8 @@ class PluginManager
 	}
 }
 
-/* some plugins samples */
-
-class GooglePlugin implements Plugin
-{
-	public function execute($value) 
-	{
-		return "googling $value";
-	}
-}
-
-class BingPlugin implements Plugin
-{
-	public function execute($value)
-	{
-		return "binging $value";
-	}
-}
-
-
 $pm = new PluginManager();
-$pm->addPlugin(new GooglePlugin())
-   ->addPlugin(new BingPlugin());
+$pm->addPlugin(new Google())
+   ->addPlugin(new Bing());
 $pm->setValue("porn");
 echo $pm->getValue();
